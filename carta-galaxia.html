@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💌 Para Joss — Carta desde la Galaxia</title>
+<meta name="description" content="Carta de amor con temática galáctica en 3D: sistema solar, nave nodriza alienígena, campo de fuerza y láseres verdes.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💌</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Dancing+Script:wght@600&family=Orbitron:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Dancing+Script:wght@600&family=Orbitron:wght@500;700&display=swap" rel="stylesheet"></noscript>
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: #01020a;
+    color: #fff;
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  }
+
+  /* Lienzo de la escena 3D (arrastra para girar la cámara) */
+  #espacio {
+    position: fixed;
+    inset: 0;
+    display: block;
+    touch-action: none;
+    cursor: grab;
+  }
+
+  /* Viñeta cinematográfica: oscurece los bordes del encuadre */
+  .vineta {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 52%, rgba(2, 3, 12, 0.45) 100%);
+  }
+
+  /* ============ CARTA DE AMOR ============ */
+  .carta-marco {
+    position: fixed;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.22, 0.9, 0.32, 1.15), visibility 0.55s;
+  }
+  .carta-marco.oculta {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, -50%) scale(0.82);
+    pointer-events: none;
+  }
+  .carta {
+    position: relative;
+    width: min(620px, 92vw);
+    max-height: 88vh;
+    overflow-y: auto;
+    z-index: 3;
+    padding: clamp(1.4rem, 3.5vw, 2.6rem) clamp(1.4rem, 4vw, 3rem);
+    background: linear-gradient(165deg, rgba(12, 18, 48, 0.72), rgba(4, 7, 22, 0.84));
+    border: 1px solid rgba(140, 190, 255, 0.28);
+    border-radius: 22px;
+    backdrop-filter: blur(14px) saturate(1.3);
+    -webkit-backdrop-filter: blur(14px) saturate(1.3);
+    box-shadow:
+      0 0 70px rgba(80, 140, 255, 0.20),
+      0 0 160px rgba(57, 255, 20, 0.07),
+      inset 0 0 46px rgba(20, 40, 90, 0.30);
+    animation: latir 6s ease-in-out infinite;
+  }
+  @keyframes latir {
+    0%, 100% {
+      box-shadow: 0 0 70px rgba(80,140,255,.20), 0 0 160px rgba(57,255,20,.07), inset 0 0 46px rgba(20,40,90,.30);
+    }
+    50% {
+      box-shadow: 0 0 95px rgba(80,140,255,.32), 0 0 210px rgba(57,255,20,.10), inset 0 0 58px rgba(20,40,90,.40);
+    }
+  }
+
+  /* ============ PORTADA CON BOTÓN PARA ABRIR ============ */
+  .portada {
+    position: fixed;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.1rem;
+    text-align: center;
+    padding: 1rem;
+    transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s;
+  }
+  .portada.oculta {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, -50%) scale(1.2);
+    pointer-events: none;
+  }
+  .nombre-destinataria {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(2.7rem, 7vw, 4.2rem);
+    color: #d7ecff;
+    text-shadow: 0 0 24px rgba(143, 231, 255, 0.6), 0 0 70px rgba(57, 255, 20, 0.25);
+    margin: 0;
+    line-height: 1.1;
+  }
+  .boton-abrir {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #eaf7ff;
+    padding: 0.95rem 2.2rem;
+    background: linear-gradient(165deg, rgba(25, 70, 140, 0.35), rgba(8, 16, 40, 0.6));
+    border: 1px solid rgba(143, 231, 255, 0.45);
+    border-radius: 999px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 0 32px rgba(80, 140, 255, 0.25), inset 0 0 16px rgba(57, 255, 20, 0.10);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    animation: invitar 2.4s ease-in-out infinite;
+  }
+  .boton-abrir:hover {
+    transform: scale(1.07);
+    border-color: rgba(57, 255, 20, 0.65);
+    box-shadow: 0 0 46px rgba(57, 255, 20, 0.28), 0 0 60px rgba(80, 140, 255, 0.2), inset 0 0 20px rgba(57, 255, 20, 0.15);
+  }
+  @keyframes invitar {
+    0%, 100% { box-shadow: 0 0 32px rgba(80,140,255,.25), inset 0 0 16px rgba(57,255,20,.10); }
+    50% { box-shadow: 0 0 58px rgba(80,140,255,.42), inset 0 0 22px rgba(57,255,20,.16); }
+  }
+
+  /* Botón de cerrar la carta */
+  .cerrar {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    z-index: 6;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(143, 231, 255, 0.4);
+    background: rgba(8, 14, 38, 0.85);
+    color: #9fc3ff;
+    font-size: 0.85rem;
+    line-height: 1;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 0 18px rgba(80, 140, 255, 0.25);
+    transition: transform 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .cerrar:hover {
+    transform: rotate(90deg);
+    color: #fff;
+    border-color: rgba(255, 120, 160, 0.7);
+    box-shadow: 0 0 24px rgba(255, 120, 160, 0.35);
+  }
+
+  .kicker {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.66rem;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: #8fd8ff;
+    text-align: center;
+    margin: 0 0 0.9rem;
+    opacity: 0.9;
+  }
+  h1 {
+    font-size: clamp(1.9rem, 4.5vw, 2.7rem);
+    font-weight: 600;
+    text-align: center;
+    margin: 0.1rem 0 0.55rem;
+    color: #f2f6ff;
+    text-shadow: 0 0 22px rgba(140, 190, 255, 0.55), 0 0 60px rgba(57, 255, 20, 0.18);
+  }
+  .sub {
+    text-align: center;
+    color: #a9bcdf;
+    font-style: italic;
+    font-size: clamp(0.95rem, 2.2vw, 1.05rem);
+    margin: 0 0 1.15rem;
+  }
+
+  .divisor {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 0 0 1.3rem;
+    color: #8fe7ff;
+    font-size: 0.72rem;
+    letter-spacing: 0.45em;
+    text-align: center;
+    justify-content: center;
+  }
+  .divisor::before, .divisor::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+  }
+  .divisor::before { background: linear-gradient(90deg, transparent, rgba(143, 231, 255, 0.55)); }
+  .divisor::after  { background: linear-gradient(90deg, rgba(143, 231, 255, 0.55), transparent); }
+
+  /* Zona editable del mensaje de amor */
+  .cuerpo {
+    min-height: 132px;
+    font-size: clamp(1.12rem, 2.4vw, 1.28rem);
+    line-height: 1.85;
+    color: #eef3ff;
+    white-space: pre-wrap;
+    word-break: break-word;
+    outline: none;
+    border-radius: 10px;
+    padding: 0.25rem 0.5rem;
+    margin: 0 -0.25rem;
+    caret-color: #39ff14;
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+  .cuerpo:focus {
+    background: rgba(120, 200, 255, 0.05);
+    box-shadow: inset 0 0 0 1px rgba(143, 231, 255, 0.35);
+  }
+  .cuerpo:empty::before {
+    content: attr(data-placeholder);
+    color: rgba(168, 184, 216, 0.52);
+    font-style: italic;
+    white-space: pre-wrap;
+    pointer-events: none;
+  }
+  .cuerpo p { margin: 0 0 0.95rem; }
+  .cuerpo p:last-child { margin-bottom: 0; }
+
+  /* Contador del tiempo que llevamos juntos */
+  .contador {
+    margin: 0.4rem 0 0.9rem;
+    text-align: center;
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.35rem, 3.2vw, 1.75rem);
+    line-height: 1.35;
+    color: #a5ecff;
+    text-shadow: 0 0 14px rgba(57, 255, 20, 0.4), 0 0 30px rgba(143, 231, 255, 0.3);
+    animation: latirContador 2.4s ease-in-out infinite;
+  }
+  @keyframes latirContador {
+    0%, 100% { text-shadow: 0 0 14px rgba(57,255,20,.4), 0 0 30px rgba(143,231,255,.3); }
+    50% { text-shadow: 0 0 24px rgba(57,255,20,.65), 0 0 50px rgba(143,231,255,.5); }
+  }
+
+  .firma-zona { margin-top: 1.4rem; text-align: right; }
+  .pre-firma {
+    color: #a9bcdf;
+    font-style: italic;
+    font-size: 1rem;
+    margin: 0 0 0.15rem;
+  }
+  .firma {
+    display: inline-block;
+    min-width: 130px;
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    color: #9be7ff;
+    text-shadow: 0 0 14px rgba(143, 231, 255, 0.5);
+    outline: none;
+    border-bottom: 1px dashed rgba(143, 231, 255, 0.35);
+    padding: 0.1rem 0.35rem;
+    caret-color: #39ff14;
+  }
+
+  [contenteditable]:focus { outline: none; }
+  ::selection { background: rgba(57, 255, 20, 0.30); }
+
+  .carta::-webkit-scrollbar { width: 8px; }
+  .carta::-webkit-scrollbar-track { background: transparent; }
+  .carta::-webkit-scrollbar-thumb {
+    background: rgba(143, 231, 255, 0.22);
+    border-radius: 8px;
+  }
+
+  /* Leyenda de la escena */
+  .leyenda {
+    position: fixed;
+    left: 16px; bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 2;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: rgba(150, 172, 214, 0.55);
+    pointer-events: none;
+  }
+  @media (max-width: 760px) { .leyenda { display: none; } }
+
+  @media (max-width: 560px) {
+    .carta { max-height: 90vh; padding: 1.25rem 1.1rem; }
+    h1 { font-size: 1.75rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .carta { animation: none; }
+    .boton-abrir { animation: none; }
+    .contador { animation: none; }
+  }
+
+  @media print {
+    body { overflow: visible; background: #fff; }
+    #espacio, .leyenda, .portada, .cerrar { display: none; }
+    .carta-marco {
+      position: static;
+      transform: none;
+      opacity: 1 !important;
+      visibility: visible !important;
+      width: 100%;
+    }
+    .carta {
+      position: static;
+      width: 100%;
+      max-height: none;
+      background: #fff;
+      border: 1px solid #999;
+      border-radius: 0;
+      box-shadow: none;
+      backdrop-filter: none;
+      animation: none;
+    }
+    h1 { color: #111; text-shadow: none; }
+    .kicker { color: #666; }
+    .sub { color: #444; }
+    .cuerpo { color: #111; }
+    .contador { color: #0a7a4a; text-shadow: none; animation: none; }
+    .firma { color: #0b7a3b; text-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="espacio" aria-hidden="true"></canvas>
+<div class="vineta" aria-hidden="true"></div>
+
+<div class="portada" id="portada">
+  <p class="kicker">✦ Transmisión interestelar ✦</p>
+  <p class="nombre-destinataria">Para Joss 💚</p>
+  <button class="boton-abrir" id="abrirCarta" type="button">💌 Abrir carta</button>
+</div>
+
+<div class="carta-marco oculta" id="cartaMarco">
+<button class="cerrar" id="cerrarCarta" type="button" aria-label="Cerrar carta" title="Cerrar carta">✕</button>
+<main class="carta" aria-label="Carta de amor con temática galáctica">
+  <header>
+    <p class="kicker">✦ Transmisión interestelar ✦</p>
+    <h1>Para ti, mi universo</h1>
+    <p class="sub">Una carta escrita entre estrellas, mientras la Tierra defiende tu corazón 🌍🛡</p>
+  </header>
+
+  <div class="divisor" aria-hidden="true">✦ ✦ ✦</div>
+
+  <div class="cuerpo" id="textoAmor" contenteditable="true" spellcheck="true"
+       role="textbox" aria-multiline="true" aria-label="Mensaje de amor"
+       data-placeholder="Escribe aquí tu mensaje de amor…&#10;&#10;Haz clic en este espacio y cuéntale a esa persona especial todo lo que sientes. Esta carta cruzará la galaxia para llegar a su corazón. 💚">
+    <p>Primero que nada quiero que sepas lo mucho que te amo, aunque siempre lo digo nunca es suficiente. No te quiero para un rato ni nada de eso: yo en verdad quiero algo bonito contigo, ya que contigo sí me nace ser todo lo que nunca fui con nadie más.</p>
+    <p>Eres la razón por la que literalmente me levanto todas las mañanas, y lo primero que hago es mirar mi celular para ver si tengo un mensaje tuyo; y lo lindo es que siempre tengo un mensaje tuyo diciéndome los buenos días y preguntándome cómo estoy. Eres lo mejor que me pudo haber pasado: el simple hecho de haberte hablado esa tarde me hace tan feliz, y no me arrepiento de haberte hablado esa tarde en la salida, ya que eres y serás el amor de mi vida porque, aparte de ser hermosa, eres súper cariñosa y atenta conmigo. Y no solo eso: tienes mi mismo humor y puedo bromear contigo como sea, y eso me encanta demasiado. La verdad no puedo imaginarme una vida sin estar a tu lado; cada mensaje tuyo, cada sonrisa, cualquier cosa me alegra el día como no tienes idea.</p>
+    <p>Te amo tanto que nunca se te vaya a olvidar lo mucho que te amo, porque cada día que pasa me haces feliz el hecho de saber que eres mi novia y, en un futuro, capaz algo más en serio. Te lo digo: nunca sentí esta sensación de que alguien me alegrara el día con tan solo un mensaje, y eso te lo agradezco mucho, ya que no sé qué haría sin ti en mi vida. Y quiero que para que no se nos olvide, llevamos:</p>
+  </div>
+
+  <div class="contador" id="contadorAmor" role="timer" aria-label="Tiempo que llevamos juntos"></div>
+
+  <div class="firma-zona">
+    <p class="pre-firma">Con todo mi amor, desde la Tierra 🌍</p>
+    <span class="firma" id="firmaAmor" contenteditable="true" spellcheck="false" aria-label="Firma">Melvin 💚</span>
+  </div>
+</main>
+</div>
+
+<div class="leyenda" aria-hidden="true">
+  <span>🖱️ Arrastra para girar la cámara · rueda para acercar</span>
+  <span>🛸 La nodriza dañada salta a su planeta y regresa reparada</span>
+  <span>🛡 Escudo · 💚 Láseres verdes · 🌍 La Tierra orbita junto a ZP-53</span>
+  <span>🚀 ZP-53 envía cruceros de escolta · 🕳️ Un agujero negro asoma a lo lejos</span>
+</div>
+
+<script>
+/* ================================================================
+   LÓGICA DE LA CARTA — texto editable con guardado automático
+   ================================================================ */
+(() => {
+  const cuerpo = document.getElementById('textoAmor');
+  const firma = document.getElementById('firmaAmor');
+  const K_TEXTO = 'carta-galaxia.v3.texto';
+  const K_FIRMA = 'carta-galaxia.v3.firma';
+  let tGuardado = null;
+
+  /* Botón para abrir la carta */
+  const portada = document.getElementById('portada');
+  const marco = document.getElementById('cartaMarco');
+  document.getElementById('abrirCarta').addEventListener('click', () => {
+    portada.classList.add('oculta');
+    marco.classList.remove('oculta');
+    window.dispatchEvent(new CustomEvent('carta:abierta', {
+      detail: { x: window.innerWidth / 2, y: window.innerHeight / 2 }
+    }));
+  });
+  document.getElementById('cerrarCarta').addEventListener('click', () => {
+    marco.classList.add('oculta');
+    portada.classList.remove('oculta');
+  });
+
+  function guardar() {
+    try {
+      localStorage.setItem(K_TEXTO, cuerpo.innerHTML);
+      localStorage.setItem(K_FIRMA, firma.innerHTML);
+    } catch (e) { /* almacenamiento no disponible */ }
+  }
+
+  function programarGuardado() {
+    clearTimeout(tGuardado);
+    tGuardado = setTimeout(guardar, 700);
+  }
+
+  [cuerpo, firma].forEach((el) => {
+    el.addEventListener('input', () => {
+      if (el === cuerpo && !cuerpo.textContent.trim()) cuerpo.innerHTML = '';
+      programarGuardado();
+    });
+    el.addEventListener('paste', (ev) => {
+      ev.preventDefault();
+      const texto = (ev.clipboardData || window.clipboardData).getData('text/plain');
+      document.execCommand('insertText', false, texto);
+    });
+  });
+
+  try {
+    const t = localStorage.getItem(K_TEXTO);
+    const f = localStorage.getItem(K_FIRMA);
+    if (t && t.trim()) cuerpo.innerHTML = t;
+    if (f && f.trim()) firma.innerHTML = f;
+  } catch (e) { /* almacenamiento no disponible */ }
+
+  /* ============ CONTADOR DEL TIEMPO JUNTOS ============ */
+  /* Fecha en que empezó la relación: 30 de junio de 2026, 14:28:06.
+     Con esa fecha, el contador marcaba exactamente
+     "3 meses, 12 días, 1 hora, 31 minutos, 54 segundos"
+     el 12 de octubre de 2026 a las 4:00 de la tarde.
+     Si empezaron a otra hora, cambia los números de aquí:
+     new Date(AÑO, MES-1, DÍA, HORA, MINUTO, SEGUNDO) */
+  const INICIO_RELACION = new Date(2026, 5, 30, 14, 28, 6);
+  const contadorEl = document.getElementById('contadorAmor');
+  const pluralPal = (n, singular, plural) => (n === 1 ? singular : plural);
+  function actualizarContador() {
+    const ahora = new Date();
+    let anios = ahora.getFullYear() - INICIO_RELACION.getFullYear();
+    let meses = ahora.getMonth() - INICIO_RELACION.getMonth();
+    let dias = ahora.getDate() - INICIO_RELACION.getDate();
+    let horas = ahora.getHours() - INICIO_RELACION.getHours();
+    let minutos = ahora.getMinutes() - INICIO_RELACION.getMinutes();
+    let segundos = ahora.getSeconds() - INICIO_RELACION.getSeconds();
+    if (segundos < 0) { segundos += 60; minutos -= 1; }
+    if (minutos < 0) { minutos += 60; horas -= 1; }
+    if (horas < 0) { horas += 24; dias -= 1; }
+    if (dias < 0) {
+      meses -= 1;
+      dias += new Date(ahora.getFullYear(), ahora.getMonth(), 0).getDate();
+    }
+    if (meses < 0) { meses += 12; anios -= 1; }
+    const partes = [];
+    if (anios > 0) partes.push(anios + ' ' + pluralPal(anios, 'año', 'años'));
+    partes.push(meses + ' ' + pluralPal(meses, 'mes', 'meses'));
+    partes.push(dias + ' ' + pluralPal(dias, 'día', 'días'));
+    partes.push(horas + ' ' + pluralPal(horas, 'hora', 'horas'));
+    partes.push(minutos + ' ' + pluralPal(minutos, 'minuto', 'minutos'));
+    partes.push(segundos + ' ' + pluralPal(segundos, 'segundo', 'segundos'));
+    contadorEl.textContent = partes.join(' con ') + ' 💚';
+    setTimeout(actualizarContador, 1000 - ahora.getMilliseconds() + 40);
+  }
+  actualizarContador();
+
+  window.addEventListener('beforeunload', guardar);
+})();
+</script>
+
+<script src="three.min.js"></script>
+<script>
+  /* Respaldo: si no está la librería local, se carga desde la red */
+  if (!window.THREE) {
+    document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');
+  }
+</script>
+<script src="postprocessing.js"></script>
+<script src="escena.js"></script>
+
+</body>
+</html>
